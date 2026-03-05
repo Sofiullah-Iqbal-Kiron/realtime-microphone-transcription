@@ -1,0 +1,2 @@
+[+] Setup smtp app password for mdkaziiqbalhosse.official@gmail.com
+[+] Autocommit is on!

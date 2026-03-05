@@ -1,0 +1,197 @@
+"use client";
+
+import { useTranscriptionStore } from "@/lib/store";
+import { useAudioTranscription } from "@/hooks/use-audio-transcription";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import Link from "next/link";
+
+export default function Page() {
+  const { startRecording, stopRecording } = useAudioTranscription();
+  const {
+    status,
+    sessionId,
+    partialText,
+    finalText,
+    wordCount,
+    duration,
+    error,
+    reset,
+  } = useTranscriptionStore();
+
+  const isRecording = status === "recording";
+  const isCompleted = status === "completed";
+  const isConnecting = status === "connecting";
+  const isStopping = status === "stopping";
+  const isIdle = status === "idle";
+  const hasError = status === "error";
+
+  const displayText = isCompleted ? finalText : partialText;
+
+  return (
+    <div className="space-y-8">
+      <div className="text-center space-y-2">
+        <h1 className="text-3xl font-bold tracking-tight">
+          Real-Time Transcription
+        </h1>
+        <p className="text-muted-foreground">
+          Click the microphone button to start recording. Your speech will be
+          transcribed in real time.
+        </p>
+      </div>
+
+      {/* Controls */}
+      <div className="flex justify-center gap-4">
+        {(isIdle || hasError) && (
+          <Button
+            size="lg"
+            onClick={startRecording}
+            className="gap-2 px-8"
+          >
+            <MicIcon />
+            Start Recording
+          </Button>
+        )}
+
+        {isConnecting && (
+          <Button size="lg" disabled className="gap-2 px-8">
+            <Spinner />
+            Connecting…
+          </Button>
+        )}
+
+        {isRecording && (
+          <Button
+            size="lg"
+            variant="destructive"
+            onClick={stopRecording}
+            className="gap-2 px-8"
+          >
+            <StopIcon />
+            Stop Recording
+          </Button>
+        )}
+
+        {isStopping && (
+          <Button size="lg" disabled className="gap-2 px-8">
+            <Spinner />
+            Finalizing…
+          </Button>
+        )}
+
+        {isCompleted && (
+          <Button size="lg" onClick={reset} className="gap-2 px-8">
+            <MicIcon />
+            New Recording
+          </Button>
+        )}
+      </div>
+
+      {/* Recording indicator */}
+      {isRecording && (
+        <div className="flex items-center justify-center gap-2 text-red-500">
+          <span className="relative flex h-3 w-3">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500" />
+          </span>
+          <span className="text-sm font-medium">Recording…</span>
+        </div>
+      )}
+
+      {/* Error */}
+      {hasError && error && (
+        <Card className="p-4 border-destructive bg-destructive/10 text-destructive">
+          <p className="text-sm font-medium">Error: {error}</p>
+        </Card>
+      )}
+
+      {/* Transcription output */}
+      <Card className="p-6 min-h-[200px]">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-semibold">Transcript</h2>
+          {isCompleted && (
+            <div className="flex gap-4 text-sm text-muted-foreground">
+              <span>{wordCount} words</span>
+              <span>{duration.toFixed(1)}s</span>
+            </div>
+          )}
+        </div>
+        {displayText ? (
+          <p className="text-base leading-relaxed whitespace-pre-wrap">
+            {displayText}
+          </p>
+        ) : (
+          <p className="text-muted-foreground italic">
+            {isRecording
+              ? "Listening… speak into your microphone."
+              : "Transcript will appear here."}
+          </p>
+        )}
+      </Card>
+
+      {/* Session link */}
+      {isCompleted && sessionId && (
+        <div className="text-center text-sm text-muted-foreground">
+          Session saved.{" "}
+          <Link
+            href={`/sessions/${sessionId}`}
+            className="text-primary underline"
+          >
+            View session details →
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MicIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+      <line x1="12" x2="12" y1="19" y2="22" />
+    </svg>
+  );
+}
+
+function StopIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+    >
+      <rect x="6" y="6" width="12" height="12" rx="1" />
+    </svg>
+  );
+}
+
+function Spinner() {
+  return (
+    <svg
+      className="animate-spin"
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+    </svg>
+  );
+}
