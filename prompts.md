@@ -1,2 +1,0 @@
-Cleanup Prompt:
-Review the entire project and make sure all .gitignore files are properly set up to exclude sensitive information, build artifacts, and dependencies. Ensure that the README.md file is comprehensive and includes clear instructions for setup, usage, and contribution guidelines. Additionally, verify that the project structure is organized logically and that all necessary files are included for both backend and frontend development. Remove all dead code and ensure that the documentation is up to date with the latest changes in the project.
