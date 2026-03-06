@@ -1,13 +1,15 @@
 "use client";
 
 import { useRef, useCallback } from "react";
-import { useTranscriptionStore } from "@/lib/store";
-
-const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000/ws/transcribe";
+import { useTranscriptionStore, useAuthStore } from "@/lib/store";
+import { WS_BASE_URL } from "@/lib/config";
 
 /**
  * Custom hook that manages the WebSocket connection and
- * MediaRecorder for real-time audio transcription.
+ * AudioContext for real-time audio transcription.
+ *
+ * Passes the access token as a query parameter for authentication:
+ *   ws://.../ws/transcribe?token=<access_token>
  */
 export function useAudioTranscription() {
   const wsRef = useRef<WebSocket | null>(null);
@@ -51,8 +53,10 @@ export function useAudioTranscription() {
       const processor = audioContext.createScriptProcessor(4096, 1, 1);
       processorRef.current = processor;
 
-      // Open WebSocket
-      const ws = new WebSocket(WS_URL);
+      // Open WebSocket with auth token
+      const accessToken = useAuthStore.getState().accessToken;
+      const wsUrl = `${WS_BASE_URL}/ws/transcribe?token=${encodeURIComponent(accessToken || "")}`;
+      const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
       ws.onopen = () => {

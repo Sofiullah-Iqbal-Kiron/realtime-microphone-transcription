@@ -18,7 +18,7 @@ from main import app
 # ---------------------------------------------------------------------------
 # Fixtures – in-memory SQLite async engine for testing
 # ---------------------------------------------------------------------------
-TEST_DATABASE_URL = "sqlite+aiosqlite:///./test.db"
+TEST_DATABASE_URL = "sqlite+aiosqlite://"
 
 test_engine = create_async_engine(TEST_DATABASE_URL, echo=False)
 TestSessionLocal = async_sessionmaker(

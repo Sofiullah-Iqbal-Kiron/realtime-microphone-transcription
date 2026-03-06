@@ -1,12 +1,16 @@
 "use client";
 
+import Link from "next/link";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Mic02Icon, StopIcon as HugeStopIcon, Loading03Icon } from "@hugeicons/core-free-icons";
+
 import { useTranscriptionStore } from "@/lib/store";
 import { useAudioTranscription } from "@/hooks/use-audio-transcription";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import Link from "next/link";
+import { formatDuration } from "@/lib/utils";
 
-export default function Page() {
+export default function RecordPage() {
   const { startRecording, stopRecording } = useAudioTranscription();
   const {
     status,
@@ -29,12 +33,12 @@ export default function Page() {
   const displayText = isCompleted ? finalText : partialText;
 
   return (
-    <div className="space-y-8">
+    <div className="mx-auto max-w-3xl space-y-8">
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
           Real-Time Transcription
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground text-sm md:text-base">
           Click the microphone button to start recording. Your speech will be
           transcribed in real time.
         </p>
@@ -43,19 +47,20 @@ export default function Page() {
       {/* Controls */}
       <div className="flex justify-center gap-4">
         {(isIdle || hasError) && (
-          <Button
-            size="lg"
-            onClick={startRecording}
-            className="gap-2 px-8"
-          >
-            <MicIcon />
+          <Button size="lg" onClick={startRecording} className="gap-2 px-8">
+            <HugeiconsIcon icon={Mic02Icon} strokeWidth={2} size={18} />
             Start Recording
           </Button>
         )}
 
         {isConnecting && (
           <Button size="lg" disabled className="gap-2 px-8">
-            <Spinner />
+            <HugeiconsIcon
+              icon={Loading03Icon}
+              strokeWidth={2}
+              size={18}
+              className="animate-spin"
+            />
             Connecting…
           </Button>
         )}
@@ -67,21 +72,26 @@ export default function Page() {
             onClick={stopRecording}
             className="gap-2 px-8"
           >
-            <StopIcon />
+            <HugeiconsIcon icon={HugeStopIcon} strokeWidth={2} size={18} />
             Stop Recording
           </Button>
         )}
 
         {isStopping && (
           <Button size="lg" disabled className="gap-2 px-8">
-            <Spinner />
+            <HugeiconsIcon
+              icon={Loading03Icon}
+              strokeWidth={2}
+              size={18}
+              className="animate-spin"
+            />
             Finalizing…
           </Button>
         )}
 
         {isCompleted && (
           <Button size="lg" onClick={reset} className="gap-2 px-8">
-            <MicIcon />
+            <HugeiconsIcon icon={Mic02Icon} strokeWidth={2} size={18} />
             New Recording
           </Button>
         )}
@@ -106,13 +116,13 @@ export default function Page() {
       )}
 
       {/* Transcription output */}
-      <Card className="p-6 min-h-[200px]">
+      <Card className="p-4 md:p-6 min-h-[200px]">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-semibold">Transcript</h2>
           {isCompleted && (
             <div className="flex gap-4 text-sm text-muted-foreground">
               <span>{wordCount} words</span>
-              <span>{duration.toFixed(1)}s</span>
+              <span>{formatDuration(duration)}</span>
             </div>
           )}
         </div>
@@ -142,56 +152,5 @@ export default function Page() {
         </div>
       )}
     </div>
-  );
-}
-
-function MicIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-      <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-      <line x1="12" x2="12" y1="19" y2="22" />
-    </svg>
-  );
-}
-
-function StopIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-    >
-      <rect x="6" y="6" width="12" height="12" rx="1" />
-    </svg>
-  );
-}
-
-function Spinner() {
-  return (
-    <svg
-      className="animate-spin"
-      xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-    </svg>
   );
 }

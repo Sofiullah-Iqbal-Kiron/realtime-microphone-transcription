@@ -6,18 +6,6 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 
 
-# ── Request Schemas ──────────────────────────────────────────────────────────
-
-class SessionBase(BaseModel):
-    language: str = "en"
-
-
-class SessionCreate(SessionBase):
-    pass
-
-
-# ── Response Schemas ─────────────────────────────────────────────────────────
-
 class SessionResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -48,8 +36,6 @@ class SessionsListOut(BaseModel):
     count: int
     sessions: list[SessionListResponse]
 
-
-# ── WebSocket Message ────────────────────────────────────────────────────────
 
 class TranscriptionMessage(BaseModel):
     """WebSocket message schema for transcription results."""

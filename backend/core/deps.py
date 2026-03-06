@@ -34,6 +34,3 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
         raise ForbiddenException("Deactivated account. Please contact support.")
 
     return user
-
-
-__all__ = ["get_db", "get_current_user"]

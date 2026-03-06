@@ -1,5 +1,5 @@
 # python
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
 
 # sqlalchemy
 from sqlalchemy.ext.asyncio import (

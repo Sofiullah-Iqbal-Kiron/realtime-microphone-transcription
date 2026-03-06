@@ -158,8 +158,10 @@ async def websocket_transcription(
 
 def _transcribe_buffer(audio_bytes: bytes, language: str = "en") -> str:
     """Convert raw PCM bytes to numpy array and transcribe."""
+    
     if len(audio_bytes) < 3200:  # minimum ~0.1s of audio at 16 kHz
         return ""
 
     audio_array = np.frombuffer(audio_bytes, dtype=np.int16).astype(np.float32) / 32768.0
+
     return transcribe_audio(audio_array, language=language)

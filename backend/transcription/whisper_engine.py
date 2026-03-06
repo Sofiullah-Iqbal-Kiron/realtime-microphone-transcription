@@ -1,14 +1,13 @@
 # python
 import logging
 
-# numpy
+# 3rd party
 import numpy as np
-
-# faster-whisper
 from faster_whisper import WhisperModel
 
 # local
 from core.config import settings
+
 
 logger = logging.getLogger(__name__)
 
@@ -17,6 +16,7 @@ _model: WhisperModel | None = None
 
 def get_whisper_model() -> WhisperModel:
     """Lazy-load and cache the Whisper model singleton."""
+
     global _model
     if _model is None:
         logger.info(
@@ -31,6 +31,7 @@ def get_whisper_model() -> WhisperModel:
             compute_type=settings.WHISPER_COMPUTE_TYPE,
         )
         logger.info("Whisper model loaded successfully.")
+        
     return _model
 
 
