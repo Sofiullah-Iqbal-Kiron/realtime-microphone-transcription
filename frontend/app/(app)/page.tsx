@@ -44,7 +44,6 @@ export default function RecordPage() {
         </p>
       </div>
 
-      {/* Controls */}
       <div className="flex justify-center gap-4">
         {(isIdle || hasError) && (
           <Button size="lg" onClick={startRecording} className="gap-2 px-8">
@@ -97,7 +96,6 @@ export default function RecordPage() {
         )}
       </div>
 
-      {/* Recording indicator */}
       {isRecording && (
         <div className="flex items-center justify-center gap-2 text-red-500">
           <span className="relative flex h-3 w-3">
@@ -108,14 +106,12 @@ export default function RecordPage() {
         </div>
       )}
 
-      {/* Error */}
       {hasError && error && (
         <Card className="p-4 border-destructive bg-destructive/10 text-destructive">
           <p className="text-sm font-medium">Error: {error}</p>
         </Card>
       )}
 
-      {/* Transcription output */}
       <Card className="p-4 md:p-6 min-h-[200px]">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-semibold">Transcript</h2>
@@ -139,7 +135,6 @@ export default function RecordPage() {
         )}
       </Card>
 
-      {/* Session link */}
       {isCompleted && sessionId && (
         <div className="text-center text-sm text-muted-foreground">
           Session saved.{" "}

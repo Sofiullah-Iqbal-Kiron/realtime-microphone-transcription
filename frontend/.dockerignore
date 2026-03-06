@@ -1,3 +1,10 @@
 node_modules/
 .next/
-.env.local
+.env
+.env.*
+coverage/
+.git/
+.gitignore
+README.md
+*.tsbuildinfo
+next-env.d.ts

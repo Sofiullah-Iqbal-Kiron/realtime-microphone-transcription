@@ -1,15 +1,4 @@
-// =============================================================================
-// TYPE DEFINITIONS
-// =============================================================================
-// All TypeScript types aligned with the backend Pydantic schemas.
-
-
 export type NullableString = string | null
-
-
-// -----------------------------------------------------------------------------
-// Auth Types
-// -----------------------------------------------------------------------------
 
 export type SigninRequest = {
     email: string,
@@ -48,11 +37,6 @@ export type MessageResponse = {
     message: string,
 }
 
-
-// -----------------------------------------------------------------------------
-// Transcription Session Types
-// -----------------------------------------------------------------------------
-
 export type SessionStatusType = "active" | "completed" | "error"
 
 export type SessionListItem = {
@@ -82,11 +66,6 @@ export type SessionsListResponse = {
     sessions: SessionListItem[],
 }
 
-
-// -----------------------------------------------------------------------------
-// WebSocket Message Types
-// -----------------------------------------------------------------------------
-
 export type TranscriptionMessage = {
     type: "partial" | "final" | "error" | "session_created",
     text: string,
@@ -95,10 +74,5 @@ export type TranscriptionMessage = {
     word_count: number,
     duration: number,
 }
-
-
-// -----------------------------------------------------------------------------
-// Transcription Store Types
-// -----------------------------------------------------------------------------
 
 export type TranscriptionStatusType = "idle" | "connecting" | "recording" | "stopping" | "completed" | "error"

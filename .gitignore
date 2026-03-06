@@ -5,11 +5,11 @@ __pycache__/
 dist/
 .venv/
 *.db
-test.db
 
 # Environment
 .env
-backend/.env
+.env.local
+.env.*.local
 
 # Node
 node_modules/
@@ -28,4 +28,6 @@ postgres_data/
 .DS_Store
 Thumbs.db
 
+# Misc
 prompts.md
+todo.txt

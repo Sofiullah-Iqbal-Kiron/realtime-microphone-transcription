@@ -3,7 +3,12 @@ __pycache__/
 *.egg-info/
 dist/
 .venv/
-.env
-*.db
-test.db
 .uv/
+.env
+.env.*
+*.db
+.git/
+.gitignore
+README.md
+tests/
+.pytest_cache/

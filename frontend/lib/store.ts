@@ -6,10 +6,6 @@ import { persist, createJSONStorage } from "zustand/middleware"
 import { NullableString, UserType, TranscriptionStatusType } from "@/lib/types"
 
 
-// =============================================================================
-// AUTH STORE
-// =============================================================================
-
 interface AuthStoreState {
     accessToken: NullableString
     refreshToken: NullableString
@@ -43,10 +39,6 @@ export const useAuthStore = create<AuthStoreState>()(
     )
 )
 
-
-// =============================================================================
-// TRANSCRIPTION STORE
-// =============================================================================
 
 interface TranscriptionStoreState {
     status: TranscriptionStatusType
@@ -89,10 +81,6 @@ export const useTranscriptionStore = create<TranscriptionStoreState>()((set) => 
         }),
 }))
 
-
-// =============================================================================
-// SELECTORS
-// =============================================================================
 
 const authSelector = {
     accessToken: (state: AuthStoreState) => state.accessToken,

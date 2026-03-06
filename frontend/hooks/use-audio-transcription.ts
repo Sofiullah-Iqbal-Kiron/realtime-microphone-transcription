@@ -4,13 +4,6 @@ import { useRef, useCallback } from "react";
 import { useTranscriptionStore, useAuthStore } from "@/lib/store";
 import { WS_BASE_URL } from "@/lib/config";
 
-/**
- * Custom hook that manages the WebSocket connection and
- * AudioContext for real-time audio transcription.
- *
- * Passes the access token as a query parameter for authentication:
- *   ws://.../ws/transcribe?token=<access_token>
- */
 export function useAudioTranscription() {
   const wsRef = useRef<WebSocket | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
@@ -32,7 +25,6 @@ export function useAudioTranscription() {
       reset();
       setStatus("connecting");
 
-      // Request microphone access
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           sampleRate: 16000,
@@ -43,17 +35,14 @@ export function useAudioTranscription() {
       });
       mediaStreamRef.current = stream;
 
-      // Setup AudioContext for raw PCM extraction
       const audioContext = new AudioContext({ sampleRate: 16000 });
       audioContextRef.current = audioContext;
 
       const source = audioContext.createMediaStreamSource(stream);
 
-      // ScriptProcessorNode to capture raw audio
       const processor = audioContext.createScriptProcessor(4096, 1, 1);
       processorRef.current = processor;
 
-      // Open WebSocket with auth token
       const accessToken = useAuthStore.getState().accessToken;
       const wsUrl = `${WS_BASE_URL}/ws/transcribe?token=${encodeURIComponent(accessToken || "")}`;
       const ws = new WebSocket(wsUrl);
@@ -95,17 +84,14 @@ export function useAudioTranscription() {
 
       ws.onclose = () => {
         if (useTranscriptionStore.getState().status === "recording") {
-          // unexpected close
           setStatus("idle");
           cleanup();
         }
       };
 
-      // Send audio data via WebSocket
       processor.onaudioprocess = (e) => {
         if (ws.readyState === WebSocket.OPEN) {
           const float32 = e.inputBuffer.getChannelData(0);
-          // Convert float32 to int16 PCM
           const int16 = new Int16Array(float32.length);
           for (let i = 0; i < float32.length; i++) {
             const s = Math.max(-1, Math.min(1, float32[i]));
@@ -126,7 +112,6 @@ export function useAudioTranscription() {
 
   const stopRecording = useCallback(() => {
     setStatus("stopping");
-    // Send stop signal
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       wsRef.current.send(JSON.stringify({ type: "stop" }));
     }
